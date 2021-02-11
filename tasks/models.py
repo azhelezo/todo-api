@@ -21,7 +21,7 @@ class Category(Label):
     pass
 
 
-class Task(models.Model):
+class BaseTask(models.Model):
     text = models.TextField(verbose_name='Цель', blank=False, null=False)
 
     deadline = models.DateTimeField(verbose_name='Срок исполнения', blank=True, null=True)
@@ -36,23 +36,33 @@ class Task(models.Model):
         related_name='categories',
         blank=True,
         null=True,
-        verbose_name='Категория', 
+        verbose_name='Категория',
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='tags',
         blank=True,
-        verbose_name='Метки', 
+        verbose_name='Метки',
     )
 
     def __str__(self):
         return self.text[:20]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ['created', ]
+        else:
+            return []
+
     class Meta:
         ordering = ['-deadline']
 
 
-class TaskHistory(Task):
+class Task(BaseTask):
+    pass
+
+
+class TaskHistory(BaseTask):
     parent = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
