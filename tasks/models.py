@@ -1,9 +1,10 @@
 from django.db import models
 
-class TagCategoryBase(models.Model):
+
+class Label(models.Model):
     name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
     search_fields = ['name']
-    
+
     def __str__(self):
         return self.name
 
@@ -11,25 +12,14 @@ class TagCategoryBase(models.Model):
         abstract = True
         ordering = ['name']
 
-class Tag(models.Model):
-    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
-    search_fields = ['name']
-    
-    def __str__(self):
-        return self.name
 
-    class Meta:
-        ordering = ['name']
+class Tag(Label):
+    pass
 
-class Category(models.Model):
-    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
-    search_fields = ['name']
-    
-    def __str__(self):
-        return self.name
 
-    class Meta:
-        ordering = ['name']
+class Category(Label):
+    pass
+
 
 class Task(models.Model):
     text = models.TextField(verbose_name='Цель', blank=False, null=False)
@@ -37,7 +27,7 @@ class Task(models.Model):
     deadline = models.DateTimeField(verbose_name='Срок исполнения', blank=True, null=True)
     created = models.DateTimeField(verbose_name='Начало', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='Последнее изменение', auto_now=True)
-    
+
     done = models.BooleanField(verbose_name='Выполнено', default=False)
 
     category = models.ForeignKey(
@@ -60,6 +50,7 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-deadline']
+
 
 class TaskHistory(Task):
     parent = models.ForeignKey(
