@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Tag, Category, Task, TaskHistory
+from simple_history.admin import SimpleHistoryAdmin
+from .models import Tag, Category, Task
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -20,13 +21,7 @@ class TaskAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class TaskHistoryAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'parent', 'deadline', 'created', 'updated', 'category', 'done',)
-    search_fields = ('text', 'parent', )
-    empty_value_display = '-пусто-'
-
-
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Task, TaskAdmin)
-admin.site.register(TaskHistory, TaskHistoryAdmin)
+#admin.site.register(Task, TaskAdmin)
+admin.site.register(Task, SimpleHistoryAdmin)

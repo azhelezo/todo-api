@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from tasks.models import Tag, Category, Task, TaskHistory
+from tasks.models import Tag, Category, Task
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class TaskHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = TaskHistory
+        model = Task.history.model
         fields = '__all__'
 
 

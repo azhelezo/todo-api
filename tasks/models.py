@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 
 class Label(models.Model):
@@ -21,7 +22,7 @@ class Category(Label):
     pass
 
 
-class BaseTask(models.Model):
+class Task(models.Model):
     text = models.TextField(verbose_name='Цель', blank=False, null=False)
 
     deadline = models.DateTimeField(verbose_name='Срок исполнения', blank=True, null=True)
@@ -44,6 +45,7 @@ class BaseTask(models.Model):
         blank=True,
         verbose_name='Метки',
     )
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.text[:20]
@@ -56,19 +58,3 @@ class BaseTask(models.Model):
 
     class Meta:
         ordering = ['-deadline']
-
-
-class Task(BaseTask):
-    pass
-
-
-class TaskHistory(BaseTask):
-    parent = models.ForeignKey(
-        Task,
-        on_delete=models.CASCADE,
-        related_name='original',
-        verbose_name='История',
-        )
-
-    class Meta:
-        ordering = ['-updated']
