@@ -1,12 +1,35 @@
 from django.db import models
 
-class Tag(models.Model):
-    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название',)
+class TagCategoryBase(models.Model):
+    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
     search_fields = ['name']
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        abstract = True
+        ordering = ['name']
+
+class Tag(models.Model):
+    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
+    search_fields = ['name']
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class Category(models.Model):
     name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
     search_fields = ['name']
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class Task(models.Model):
     text = models.TextField(verbose_name='Цель', blank=False, null=False)
@@ -29,7 +52,6 @@ class Task(models.Model):
         Tag,
         related_name='tags',
         blank=True,
-        null=True,
         verbose_name='Метки', 
     )
 
@@ -43,6 +65,9 @@ class TaskHistory(Task):
     parent = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
-        related_name='parent',
+        related_name='original',
         verbose_name='История',
         )
+
+    class Meta:
+        ordering = ['-updated']
