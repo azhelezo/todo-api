@@ -1,3 +1,48 @@
 from django.db import models
 
-# Create your models here.
+class Tag(models.Model):
+    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название',)
+    search_fields = ['name']
+
+class Category(models.Model):
+    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
+    search_fields = ['name']
+
+class Task(models.Model):
+    text = models.TextField(verbose_name='Цель', blank=False, null=False)
+
+    deadline = models.DateTimeField(verbose_name='Срок исполнения', blank=True, null=True)
+    created = models.DateTimeField(verbose_name='Начало', auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='Последнее изменение', auto_now=True)
+    
+    done = models.BooleanField(verbose_name='Выполнено', default=False)
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        related_name='categories',
+        blank=True,
+        null=True,
+        verbose_name='Категория', 
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='tags',
+        blank=True,
+        null=True,
+        verbose_name='Метки', 
+    )
+
+    def __str__(self):
+        return self.text[:20]
+
+    class Meta:
+        ordering = ['-deadline']
+
+class TaskHistory(Task):
+    parent = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name='parent',
+        verbose_name='История',
+        )
