@@ -3,7 +3,7 @@ from simple_history.models import HistoricalRecords
 
 
 class Label(models.Model):
-    name = models.SlugField(primary_key=True, allow_unicode=True, verbose_name='Название')
+    name = models.SlugField('Название', primary_key=True, allow_unicode=True)
     search_fields = ['name']
 
     def __str__(self):
@@ -23,13 +23,13 @@ class Category(Label):
 
 
 class Task(models.Model):
-    text = models.TextField(verbose_name='Цель', blank=False, null=False)
+    text = models.TextField('Цель', blank=False, null=False)
 
-    deadline = models.DateTimeField(verbose_name='Срок исполнения', blank=True, null=True)
-    created = models.DateTimeField(verbose_name='Начало', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='Последнее изменение', auto_now=True)
+    deadline = models.DateTimeField('Срок исполнения', blank=True, null=True)
+    created = models.DateTimeField('Начало', auto_now_add=True)
+    updated = models.DateTimeField('Последнее изменение', auto_now=True)
 
-    done = models.BooleanField(verbose_name='Выполнено', default=False)
+    done = models.BooleanField('Выполнено', default=False)
 
     category = models.ForeignKey(
         Category,
@@ -57,4 +57,4 @@ class Task(models.Model):
             return []
 
     class Meta:
-        ordering = ['-deadline']
+        ordering = ['done', '-deadline', ]

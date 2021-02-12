@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
-from rest_framework.decorators import action
-from rest_framework import filters, mixins, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, viewsets
+from rest_framework.exceptions import NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -13,6 +13,10 @@ from .serializers import TaskSerializer, TagSerializer, CategorySerializer, Task
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend, ]
+    filterset_fields = ['category', 'tags', 'done', 'deadline', ]
+    search_fields = ['text', ]
+    ordering_fields = '__all__'
 
     def create(self, validated_data):
         task, created = Task.objects.update_or_create(data=validated_data)
@@ -27,7 +31,7 @@ class TaskHistoryViewSet(viewsets.ModelViewSet):
         queryset = Task.history.filter(id=id)
         if queryset:
             return queryset
-        return redirect('home')
+        raise NotFound()
 
 
 class TagViewSet(viewsets.ModelViewSet):

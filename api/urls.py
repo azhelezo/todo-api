@@ -17,5 +17,5 @@ v1_router.register('categories', CategoryViewSet, basename=CategoryViewSet)
 
 urlpatterns = [
     path('v1/tasks/<int:pk>/history/', task_history, name='task-history'),
-    path('v1/', include(v1_router.urls)),
+    path('v1/', include(v1_router.urls), name='v1'),
 ]
