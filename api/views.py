@@ -6,6 +6,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from rest_framework_csv import renderers as r
+
 from tasks.models import Task, Tag, Category
 from .serializers import TaskSerializer, TagSerializer, CategorySerializer, TaskHistorySerializer
 
@@ -17,10 +19,6 @@ class TaskViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'tags', 'done', 'deadline', ]
     search_fields = ['text', ]
     ordering_fields = '__all__'
-
-    def create(self, validated_data):
-        task, created = Task.objects.update_or_create(data=validated_data)
-        return task
 
 
 class TaskHistoryViewSet(viewsets.ModelViewSet):

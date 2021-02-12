@@ -15,13 +15,6 @@ class CategoryAdmin(admin.ModelAdmin):
     empty_value_display = '-пусто-'
 
 
-class TaskAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'deadline', 'created', 'updated', 'category', 'done',)
-    search_fields = ('text', )
-    empty_value_display = '-пусто-'
-
-
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Category, CategoryAdmin)
-#admin.site.register(Task, TaskAdmin)
 admin.site.register(Task, SimpleHistoryAdmin)

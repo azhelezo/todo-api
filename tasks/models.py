@@ -45,7 +45,7 @@ class Task(models.Model):
         blank=True,
         verbose_name='Метки',
     )
-    history = HistoricalRecords()
+    history = HistoricalRecords(cascade_delete_history=True)
 
     def __str__(self):
         return self.text[:20]
