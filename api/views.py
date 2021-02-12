@@ -5,6 +5,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from django.http import HttpResponse, FileResponse
 
 from rest_framework_csv import renderers as r
 
@@ -21,6 +22,22 @@ class TaskViewSet(viewsets.ModelViewSet):
     ordering_fields = '__all__'
 
 
+class CSVDownloadMixin(viewsets.ModelViewSet):
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer_class()
+        data = serializer(queryset, many=True)
+        renderer = r.CSVRenderer()
+        response = HttpResponse(renderer.render(data.data), content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="data.csv"'
+        return response
+
+
+class TasksDownload(TaskViewSet, CSVDownloadMixin):
+    pass
+
+
 class TaskHistoryViewSet(viewsets.ModelViewSet):
     serializer_class = TaskHistorySerializer
 
@@ -30,6 +47,10 @@ class TaskHistoryViewSet(viewsets.ModelViewSet):
         if queryset:
             return queryset
         raise NotFound()
+
+
+class TaskHistoryDownload(TaskHistoryViewSet, CSVDownloadMixin):
+    pass
 
 
 class TagViewSet(viewsets.ModelViewSet):
