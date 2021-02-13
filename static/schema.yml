@@ -1,18 +1,23 @@
 openapi: 3.0.3
 info:
   title: 'ToDO API'
-  version: 1.0.0
+  version: 0.5.0
   description: |
     запросы к API начинаются с `/api/v1/`
 
-    #Описание
+    # Описание
+
     Список задач с возможностью добавлять, редактировать и удалять задачи.
+
     Можно устанавливать крайний срок исполнения и отмечать, выполнена задача или нет.
+
     История изменений сохраняется.
+
     Каждая задача может относиться к одной категории и может быть отмечена несколькими метками.
     
+    
 servers:
-  - url: /api/v1/
+  - url: /
 
 tags:
   - name: TASKS
@@ -21,6 +26,10 @@ tags:
     description: Метки
   - name: CATEGORIES
     description: Категории
+  - name: DOWNLOAD
+    description: Выгрузка списка задач в файл и загрузка новых задач из файла.
+  - name: UPLOAD
+    description: Отправка файла с задачами на удаленный сервер.
 
 paths:
   /categories/:
@@ -37,7 +46,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Category'
-          description: ''
     post:
       tags:
       - CATEGORIES
@@ -55,7 +63,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-          description: ''
   /categories/{name}/:
     get:
       tags:
@@ -67,245 +74,82 @@ paths:
         name: name
         schema:
           type: string
-        description: A unique value identifying this category.
+        description: Название категории.
         required: true
-      security:
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-          description: ''
     put:
-      operationId: api_v1_categories_update
-      description: ''
+      tags:
+      - CATEGORIES
+      description: |
+        Изменить категорию по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this category.
+        description: Название категории.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CategoryRequest'
         required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-          description: ''
     patch:
-      operationId: api_v1_categories_partial_update
-      description: ''
+      tags:
+      - CATEGORIES
+      description: |
+        Изменить категорию по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this category.
+        description: Название категории.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedCategoryRequest'
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Category'
-          description: ''
     delete:
-      operationId: api_v1_categories_destroy
-      description: ''
+      tags:
+      - CATEGORIES
+      description: |
+        Удалить категорию по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this category.
+        description: Название категории.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '204':
           description: No response body
-  /api/v1/schema/:
+  /tags/:
     get:
-      operationId: api_v1_schema_retrieve
-      description: |-
-        OpenApi3 schema for this API. Format can be selected via content negotiation.
-
-        - YAML: application/vnd.oai.openapi
-        - JSON: application/vnd.oai.openapi+json
-      parameters:
-      - in: query
-        name: format
-        schema:
-          type: string
-          enum:
-          - json
-          - yaml
-      - in: query
-        name: lang
-        schema:
-          type: string
-          enum:
-          - af
-          - ar
-          - ar-dz
-          - ast
-          - az
-          - be
-          - bg
-          - bn
-          - br
-          - bs
-          - ca
-          - cs
-          - cy
-          - da
-          - de
-          - dsb
-          - el
-          - en
-          - en-au
-          - en-gb
-          - eo
-          - es
-          - es-ar
-          - es-co
-          - es-mx
-          - es-ni
-          - es-ve
-          - et
-          - eu
-          - fa
-          - fi
-          - fr
-          - fy
-          - ga
-          - gd
-          - gl
-          - he
-          - hi
-          - hr
-          - hsb
-          - hu
-          - hy
-          - ia
-          - id
-          - ig
-          - io
-          - is
-          - it
-          - ja
-          - ka
-          - kab
-          - kk
-          - km
-          - kn
-          - ko
-          - ky
-          - lb
-          - lt
-          - lv
-          - mk
-          - ml
-          - mn
-          - mr
-          - my
-          - nb
-          - ne
-          - nl
-          - nn
-          - os
-          - pa
-          - pl
-          - pt
-          - pt-br
-          - ro
-          - ru
-          - sk
-          - sl
-          - sq
-          - sr
-          - sr-latn
-          - sv
-          - sw
-          - ta
-          - te
-          - tg
-          - th
-          - tk
-          - tr
-          - tt
-          - udm
-          - uk
-          - ur
-          - uz
-          - vi
-          - zh-hans
-          - zh-hant
       tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/vnd.oai.openapi:
-              schema:
-                type: object
-                additionalProperties: {}
-            application/yaml:
-              schema:
-                type: object
-                additionalProperties: {}
-            application/vnd.oai.openapi+json:
-              schema:
-                type: object
-                additionalProperties: {}
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-          description: ''
-  /api/v1/tags/:
-    get:
-      operationId: api_v1_tags_list
-      description: ''
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - TAGS
+      description: |
+        Получить список всех меток.
       responses:
         '200':
           content:
@@ -314,173 +158,148 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Tag'
-          description: ''
     post:
-      operationId: api_v1_tags_create
-      description: ''
       tags:
-      - api
+      - TAGS
+      description: |
+        Создать новую метку.
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/TagRequest'
         required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tag'
-          description: ''
-  /api/v1/tags/{name}/:
+  /tags/{name}/:
     get:
-      operationId: api_v1_tags_retrieve
-      description: ''
+      tags:
+      - TAGS
+      description: |
+        Получить метку по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this tag.
+        description: Название метки.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tag'
-          description: ''
     put:
-      operationId: api_v1_tags_update
-      description: ''
+      tags:
+      - TAGS
+      description: |
+        Изменить метку по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this tag.
+        description: Название метки.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/TagRequest'
         required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tag'
-          description: ''
     patch:
-      operationId: api_v1_tags_partial_update
-      description: ''
+      tags:
+      - TAGS
+      description: |
+        Изменить метку по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this tag.
+        description: Название метки.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedTagRequest'
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tag'
-          description: ''
     delete:
-      operationId: api_v1_tags_destroy
-      description: ''
+      tags:
+      - TAGS
+      description: |
+        Удалить метку по названию.
       parameters:
       - in: path
         name: name
         schema:
           type: string
-        description: A unique value identifying this tag.
+        description: Название метки.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '204':
           description: No response body
-  /api/v1/tasks/:
+  /tasks/:
     get:
-      operationId: api_v1_tasks_list
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Получить список задач.
       parameters:
       - in: query
         name: category
+        description: Фильтр по категории.
         schema:
           type: string
           nullable: true
       - in: query
         name: deadline
+        description: Фильтр по сроку выполнения.
         schema:
           type: string
           format: date-time
           nullable: true
       - in: query
         name: done
+        description: Фильтр по выполнению.
         schema:
           type: boolean
       - name: ordering
         required: false
         in: query
-        description: Which field to use when ordering the results.
+        description: Какое поле использовать для сортировки.
         schema:
           type: string
       - name: search
         required: false
         in: query
-        description: A search term.
+        description: Поиск по тексту задачи.
         schema:
           type: string
       - in: query
         name: tags
+        description: Фильтр по меткам.
         schema:
           type: array
           items:
             type: string
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -489,145 +308,117 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
-          description: ''
     post:
-      operationId: api_v1_tasks_create
-      description: ''
       tags:
-      - api
+      - TASKS
+      description: |
+        Создать задачу.
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/TaskRequest'
         required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
-          description: ''
-  /api/v1/tasks/{id}/:
+  /tasks/{id}/:
     get:
-      operationId: api_v1_tasks_retrieve
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Получить задачу по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
-          description: ''
     put:
-      operationId: api_v1_tasks_update
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Изменить задачу по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/TaskRequest'
         required: true
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
-          description: ''
     patch:
-      operationId: api_v1_tasks_partial_update
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Изменить задачу по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
       requestBody:
         content:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/PatchedTaskRequest'
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
-          description: ''
     delete:
-      operationId: api_v1_tasks_destroy
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Удалить задачу по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '204':
           description: No response body
-  /api/v1/tasks/{id}/history/:
+  /tasks/{id}/history/:
     get:
-      operationId: api_v1_tasks_history_list
-      description: ''
+      tags:
+      - TASKS
+      description: |
+        Получить историю изменений задачи по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -636,76 +427,51 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TaskHistory'
-          description: ''
-  /api/v1/tasks/{id}/history/download/:
+  /tasks/{id}/history/download/:
     get:
-      operationId: api_v1_tasks_history_download_list
-      description: ''
+      tags:
+      - DOWNLOAD
+      description: |
+        Скачать историю изменений задачи по ID.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
+        description: Уникальный ID задачи.
         required: true
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TaskHistory'
-          description: ''
-  /api/v1/tasks/download/:
+  /tasks/download/:
     get:
-      operationId: api_v1_tasks_download_list
-      description: ''
-      parameters:
-      - in: query
-        name: category
-        schema:
-          type: string
-          nullable: true
-      - in: query
-        name: deadline
-        schema:
-          type: string
-          format: date-time
-          nullable: true
-      - in: query
-        name: done
-        schema:
-          type: boolean
-      - name: ordering
-        required: false
-        in: query
-        description: Which field to use when ordering the results.
-        schema:
-          type: string
-      - name: search
-        required: false
-        in: query
-        description: A search term.
-        schema:
-          type: string
-      - in: query
-        name: tags
-        schema:
-          type: array
-          items:
-            type: string
       tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - DOWNLOAD
+      description: |
+        Скачать все задачи в файле `.csv`.
+  /tasks/send/:
+    post:
+      tags:
+      - UPLOAD
+      description: |
+        Отправить файл с задачами на удаленный сервер.  
+
+        Все существующие задачи выгружаются в файл `.csv` и отправляются на удаленный сервер.
+
+        Порядок полей: `category`, `created`, `deadline`, `done`, `id`, `tags.0`, `tags.1`, `tags.2`, `...`, `tags.n`, `text`, `updated`.
+
+      responses:
+  /tasks/upload/:
+    post:
+      tags:
+      - DOWNLOAD
+      description: |
+        Загрузить задачи из файла.                      
+
+        Порядок полей для парсера:
+        `text`,`deadline`,`category`,`tag1`,`tag2`,`tag3`,`tag4`,..
+        
+        Формат `deadline` - ГГГГ-ММ-ДД ЧЧ:ММ
+
+        Количество меток не ограничено.
+
       responses:
         '200':
           content:
@@ -714,45 +480,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
-          description: ''
-  /api/v1/tasks/send/:
-    get:
-      operationId: api_v1_tasks_send_retrieve
-      description: ''
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
-  /api/v1/tasks/upload/:
-    post:
-      operationId: api_v1_tasks_upload_create
-      description: ''
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
-    put:
-      operationId: api_v1_tasks_upload_update
-      description: ''
-      tags:
-      - api
-      security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          description: No response body
+        '400':
+          description: Неверный формат файла.
 components:
   schemas:
     Category:
@@ -760,6 +489,7 @@ components:
       properties:
         name:
           type: string
+          description: Название категории
           pattern: ^[-\w]+$
           maxLength: 50
       required:
@@ -769,6 +499,7 @@ components:
       properties:
         name:
           type: string
+          description: Название категории
           pattern: ^[-\w]+$
           maxLength: 50
       required:
@@ -784,6 +515,7 @@ components:
       properties:
         name:
           type: string
+          description: Название категории
           pattern: ^[-\w]+$
           maxLength: 50
     PatchedTagRequest:
@@ -791,6 +523,7 @@ components:
       properties:
         name:
           type: string
+          description: Название метки
           pattern: ^[-\w]+$
           maxLength: 50
     PatchedTaskRequest:
@@ -798,29 +531,37 @@ components:
       properties:
         deadline:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ.
           format: date-time
         created:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается создании.
           format: date-time
         updated:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при последнем изменении.
           format: date-time
         text:
+          description: Текст задачи.
           type: string
         done:
+          description: Выполнено - ДА / НЕТ.
           type: boolean
         category:
+          description: Название категории
           type: string
           nullable: true
         tags:
           type: array
           items:
             type: string
+          description: Список меток
     Tag:
       type: object
       properties:
         name:
           type: string
+          description: Название метки
           pattern: ^[-\w]+$
           maxLength: 50
       required:
@@ -830,6 +571,7 @@ components:
       properties:
         name:
           type: string
+          description: Название метки
           pattern: ^[-\w]+$
           maxLength: 50
       required:
@@ -839,57 +581,70 @@ components:
       properties:
         id:
           type: integer
+          description: ID задачи.
           readOnly: true
         deadline:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ.
           format: date-time
         created:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается создании.
           format: date-time
         updated:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при последнем изменении.
           format: date-time
         text:
+          description: Текст задачи.
           type: string
         done:
+          description: Выполнено - ДА / НЕТ.
           type: boolean
         category:
           type: string
+          description: Название категории
           nullable: true
         tags:
           type: array
           items:
             type: string
+          description: Список меток
       required:
-      - created
       - deadline
-      - id
       - text
-      - updated
     TaskHistory:
       type: object
       properties:
         history_id:
+          description: ID записи об изменениях.
           type: integer
           readOnly: true
         deadline:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ.
           format: date-time
         created:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при создании.
           format: date-time
         updated:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при изменении.
           format: date-time
         history_date:
           type: string
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при изменении.
           format: date-time
         id:
+          description: ID задачи.
           type: integer
         text:
+          description: Текст задачи.
           type: string
         done:
           type: boolean
+          description: Выполнено - ДА / НЕТ.
         history_change_reason:
           type: string
           nullable: true
@@ -898,51 +653,41 @@ components:
           $ref: '#/components/schemas/HistoryTypeEnum'
         category:
           type: string
+          description: Название категории
           nullable: true
         history_user:
           type: integer
           nullable: true
-      required:
-      - created
-      - deadline
-      - history_date
-      - history_id
-      - history_type
-      - text
-      - updated
     TaskRequest:
       type: object
       properties:
         deadline:
           type: string
           format: date-time
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ.
         created:
           type: string
           format: date-time
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при создании.
         updated:
           type: string
           format: date-time
+          description: Время в формате ГГГГ-ММ-ДД ЧЧ:ММ, автоматически устанавливается при последнем изменении.
         text:
           type: string
+          description: Текст задачи.
         done:
           type: boolean
+          description: Выполнено - ДА / НЕТ.
         category:
           type: string
           nullable: true
+          description: Категория.
         tags:
           type: array
           items:
             type: string
+          description: Список меток.
       required:
-      - created
       - deadline
       - text
-      - updated
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: Session

@@ -5,8 +5,8 @@ from tasks.models import Tag, Category, Task
 
 class TaskSerializer(serializers.ModelSerializer):
     deadline = serializers.DateTimeField(format=DATETIME_FORMAT)
-    created = serializers.DateTimeField(format=DATETIME_FORMAT)
-    updated = serializers.DateTimeField(format=DATETIME_FORMAT)
+    created = serializers.DateTimeField(format=DATETIME_FORMAT, required=False)
+    updated = serializers.DateTimeField(format=DATETIME_FORMAT, required=False)
 
     class Meta:
         model = Task

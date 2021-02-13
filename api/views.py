@@ -20,7 +20,7 @@ from .serializers import (TaskSerializer, TagSerializer, CategorySerializer,
                           TaskHistorySerializer)
 
 
-@api_view(['POST', 'PUT', ])
+@api_view(['POST', ])
 def upload(request):
     if (
             len(request.FILES) == 0 or
@@ -52,7 +52,7 @@ def upload(request):
     return Response(out)
 
 
-@api_view(['GET', ])
+@api_view(['POST', ])
 def send(request):
     url = 'http://qa-test.expsys.org:8080/upload-file'
     #url2 = 'https://httpbin.org/anything'
