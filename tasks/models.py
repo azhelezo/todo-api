@@ -25,9 +25,9 @@ class Category(Label):
 class Task(models.Model):
     text = models.TextField('Цель', blank=False, null=False)
 
-    deadline = models.DateTimeField('Срок исполнения', blank=True, null=True)
-    created = models.DateTimeField('Начало', auto_now_add=True)
-    updated = models.DateTimeField('Последнее изменение', auto_now=True)
+    deadline = models.DateTimeField('Срок исполнения', null=True, blank=True)
+    created = models.DateTimeField('Начало', auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField('Последнее изменение', auto_now=True, null=True, blank=True)
 
     done = models.BooleanField('Выполнено', default=False)
 
