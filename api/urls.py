@@ -1,9 +1,19 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import TaskViewSet, TagViewSet, CategoryViewSet, TaskHistoryViewSet
+from .views import TaskViewSet, TagViewSet, CategoryViewSet, TaskHistoryViewSet, TaskHistoryDownload, TasksDownload
 
 task_history = TaskHistoryViewSet.as_view(
+    {
+        'get': 'list',
+    }
+)
+tasks_download = TasksDownload.as_view(
+    {
+        'get': 'list',
+    }
+)
+task_history_download = TaskHistoryDownload.as_view(
     {
         'get': 'list',
     }
@@ -16,6 +26,8 @@ v1_router.register('tags', TagViewSet, basename=TagViewSet)
 v1_router.register('categories', CategoryViewSet, basename=CategoryViewSet)
 
 urlpatterns = [
+    path('v1/tasks/download/', tasks_download, name='task-download'),
     path('v1/tasks/<int:pk>/history/', task_history, name='task-history'),
-    path('v1/', include(v1_router.urls)),
+    path('v1/tasks/<int:pk>/history/download/', task_history_download, name='task-history-download'),
+    path('v1/', include(v1_router.urls), name='v1'),
 ]

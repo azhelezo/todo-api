@@ -1,12 +1,20 @@
+import environ
 from pathlib import Path
+
+env = environ.Env()
+environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'hsrnlb5t^r%9tq79hsludyy8-fb^f0g+(9&0a!k-wx2m_i0w_5'
+SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '0.0.0.0',
+    '127.0.0.1',
+    'localhost',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -33,7 +41,9 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny', ]
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+        ],
 }
 
 ROOT_URLCONF = 'todo.urls'
