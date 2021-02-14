@@ -1,6 +1,6 @@
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
-from .models import Tag, Category, Task
+from .models import Category, Tag, Task
 
 
 class TagAdmin(admin.ModelAdmin):

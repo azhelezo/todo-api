@@ -1,6 +1,6 @@
 from rest_framework import serializers
+from tasks.models import Category, Tag, Task
 from todo.settings import DATETIME_FORMAT
-from tasks.models import Tag, Category, Task
 
 
 class TaskSerializer(serializers.ModelSerializer):

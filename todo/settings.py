@@ -1,6 +1,7 @@
-import environ
 import os
 from pathlib import Path
+
+import environ
 
 env = environ.Env()
 environ.Env.read_env()
@@ -54,7 +55,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
     ],
-    'DEFAULT_THROTTLE_RATES': {'anon': '1/second'},
+    'DEFAULT_THROTTLE_RATES': {'anon': '60/minute'},
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'COMPONENT_SPLIT_REQUEST': True,
 }
@@ -110,7 +111,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 STATIC_URL = '/static/'
 

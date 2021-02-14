@@ -1,23 +1,18 @@
+import requests
+from datetime import datetime as dt
+from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import redirect
-from rest_framework import filters, viewsets, status
+from rest_framework import filters, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import NotFound
-from rest_framework.generics import get_object_or_404, CreateAPIView
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from django.http import HttpResponse, FileResponse
-from datetime import datetime as dt
-import requests
-import csv
-from todo.settings import DATETIME_FORMAT
-
 from rest_framework_csv import renderers as r
+from tasks.models import Category, Tag, Task
+from todo.settings import DATETIME_FORMAT
+from .serializers import (CategorySerializer, TagSerializer,
+                          TaskHistorySerializer, TaskSerializer)
 
-from tasks.models import Task, Tag, Category
-from .serializers import (TaskSerializer, TagSerializer, CategorySerializer,
-                          TaskHistorySerializer)
+UPLOAD_URL = 'https://httpbin.org/anything'  # 'http://qa-test.expsys.org:8080/upload-file'
 
 
 @api_view(['POST', ])
@@ -54,15 +49,13 @@ def upload(request):
 
 @api_view(['POST', ])
 def send(request):
-    url = 'http://qa-test.expsys.org:8080/upload-file'
-    #url2 = 'https://httpbin.org/anything'
     queryset = Task.objects.all()
     serializer = TaskSerializer
     data = serializer(queryset, many=True)
     renderer = r.CSVRenderer()
     file_text = (renderer.render(data.data).decode())
     files = {'file': ('send.csv', file_text)}
-    re = requests.post(url, files=files, )
+    re = requests.post(UPLOAD_URL, files=files, )
     return Response(re.json())
 
 

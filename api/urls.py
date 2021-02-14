@@ -1,10 +1,10 @@
 from django.urls import include, path
-from rest_framework.routers import DefaultRouter
-from .views import (TaskViewSet, TagViewSet, CategoryViewSet,
-                    TaskHistoryViewSet, TaskHistoryDownload, TasksDownload,
-                    upload, send, )
-                    
 from django.views.generic import TemplateView
+from rest_framework.routers import DefaultRouter
+
+from .views import (CategoryViewSet, TagViewSet, TaskHistoryDownload,
+                    TaskHistoryViewSet, TasksDownload, TaskViewSet, send,
+                    upload)
 
 task_history = TaskHistoryViewSet.as_view(
     {
