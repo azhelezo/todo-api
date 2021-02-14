@@ -100,10 +100,44 @@ class TaskHistoryDownload(TaskHistoryViewSet, CSVDownloadMixin):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    queryset = Tag.objects.all()
-    serializer_class = TagSerializer
+
+    def get_queryset(self):
+        name = self.kwargs.get('pk', None)
+        queryset = Task.objects.filter(tags__name=name)
+        if queryset:
+            return queryset
+        return Tag.objects.all()
+
+    def get_serializer_class(self):
+        name = self.kwargs.get('pk', None)
+        if name is not None:
+            return TaskSerializer
+        return TagSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer_class()
+        data = serializer(queryset, many=True)
+        return Response(data.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        name = self.kwargs.get('pk', None)
+        if name is None:
+            return Category.objects.all()
+        queryset = Task.objects.filter(category=name)
+        return queryset
+
+    def get_serializer_class(self):
+        name = self.kwargs.get('pk', None)
+        if name is not None:
+            return TaskSerializer
+        return CategorySerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer_class()
+        data = serializer(queryset, many=True)
+        return Response(data.data)

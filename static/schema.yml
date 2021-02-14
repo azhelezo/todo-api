@@ -68,7 +68,7 @@ paths:
       tags:
       - CATEGORIES
       description: |
-        Получить категорию по названию.
+        Получить все задачи в категории.
       parameters:
       - in: path
         name: name
@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                $ref: '#/components/schemas/Task'
     put:
       tags:
       - CATEGORIES
@@ -180,7 +180,7 @@ paths:
       tags:
       - TAGS
       description: |
-        Получить метку по названию.
+        Получить все задачи с меткой.
       parameters:
       - in: path
         name: name
@@ -193,7 +193,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Tag'
+                $ref: '#/components/schemas/Task'
     put:
       tags:
       - TAGS
