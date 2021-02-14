@@ -103,14 +103,15 @@ class TagViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         name = self.kwargs.get('pk', None)
-        queryset = Task.objects.filter(tags__name=name)
-        if queryset:
-            return queryset
-        return Tag.objects.all()
+        if name is None:
+            return Tag.objects.all()
+        if self.action != 'retrieve':
+            return Tag.objects.filter(name=name)
+        return Task.objects.filter(tags__name=name)
 
     def get_serializer_class(self):
         name = self.kwargs.get('pk', None)
-        if name is not None:
+        if name is not None and self.action == 'retrieve':
             return TaskSerializer
         return TagSerializer
 
@@ -127,12 +128,13 @@ class CategoryViewSet(viewsets.ModelViewSet):
         name = self.kwargs.get('pk', None)
         if name is None:
             return Category.objects.all()
-        queryset = Task.objects.filter(category=name)
-        return queryset
+        if self.action != 'retrieve':
+            return Category.objects.filter(name=name)
+        return Task.objects.filter(category=name)
 
     def get_serializer_class(self):
         name = self.kwargs.get('pk', None)
-        if name is not None:
+        if name is not None and self.action == 'retrieve':
             return TaskSerializer
         return CategorySerializer
 
