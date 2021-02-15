@@ -12,7 +12,8 @@ from todo.settings import DATETIME_FORMAT
 from .serializers import (CategorySerializer, TagSerializer,
                           TaskHistorySerializer, TaskSerializer)
 
-UPLOAD_URL = 'https://httpbin.org/anything'  # 'http://qa-test.expsys.org:8080/upload-file'
+UPLOAD_URL = 'http://qa-test.expsys.org:8080/upload-file'
+BIN = 'https://httpbin.org/anything'
 
 
 @api_view(['POST', ])
@@ -55,7 +56,7 @@ def send(request):
     renderer = r.CSVRenderer()
     file_text = (renderer.render(data.data).decode())
     files = {'file': ('send.csv', file_text)}
-    re = requests.post(UPLOAD_URL, files=files, )
+    re = requests.post(BIN, files=files)
     return Response(re.json())
 
 

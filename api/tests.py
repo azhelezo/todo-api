@@ -95,6 +95,9 @@ class TestTags(TaskTests):
         }
         response = self.client.patch(f'/api/v1/tasks/{pk}/', data=data)
         self.assertContains(response, data.get('tags')[0], status_code=200)
+        task = Task.objects.get(pk=pk)
+        response = self.client.get(f'/api/v1/tags/{self.test_tag1.name}/')
+        self.assertContains(response, task.text, status_code=200)
 
 
 class TestCategory(TaskTests):
@@ -134,6 +137,9 @@ class TestCategory(TaskTests):
         }
         response = self.client.patch(f'/api/v1/tasks/{pk}/', data=data)
         self.assertContains(response, data.get('category'), status_code=200)
+        task = Task.objects.get(pk=pk)
+        response = self.client.get(f'/api/v1/categories/{self.test_cat1}/')
+        self.assertContains(response, task.text, status_code=200)
 
 
 class TestDownload(TaskTests):
